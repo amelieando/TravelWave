@@ -140,45 +140,45 @@
     </div>
   
     <script>
-        document.getElementById('generate-btn').addEventListener('click', async () => {
+       document.getElementById('generate-btn').addEventListener('click', async () => {
             const destination = document.getElementById('destination').value;
             const season = document.getElementById('season').value;
             const details = document.getElementById('details').value;
-            const days = document.getElementById('days'). value;
-
+            const days = document.getElementById('dynamic-select').value; // Corrected this line
+        
             // Collect all checked trip types
             const tripTypes = Array.from(document.querySelectorAll('.trip-type:checked'))
                 .map(checkbox => checkbox.value)
                 .join(', ');
-
+        
             const resultDiv = document.getElementById('result');
-
+        
             // Validate inputs
-            if (!destination || !season) {
-                resultDiv.textContent = 'Please fill out all required fields: destination and season.';
+            if (!destination || !season || !days) {
+                resultDiv.textContent = 'Please fill out all required fields: destination, season, and days.';
                 return;
             }
-
+        
             // Combine all input data
             const input = `
                 Destination: ${destination}
                 Season: ${season}
                 Days: ${days}
-                Details: ${details || 'No additional details'}
+                Details: ${details || 'No additional'}
                 Trip Types: ${tripTypes || 'No specific trip types'}
             `;
-
+        
             resultDiv.textContent = 'Generating itinerary...';
-
+        
             try {
                 const response = await fetch('/generate-itinerary', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ vacay_description: input })
                 });
-
+        
                 const data = await response.json();
-
+        
                 if (response.ok) {
                     resultDiv.textContent = data.travel_prompt;
                 } else {
