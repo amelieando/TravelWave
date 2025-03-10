@@ -8,7 +8,7 @@ API_KEY = "AIzaSyCcdFlnejJo3zVBaKTre4bdYfphKOe7_Aw"  # Replace with your actual 
 genai.configure(api_key=API_KEY)
 
 # Initialize the model
-model = genai.GenerativeModel('models/text-bison-001')  # Use the correct model name
+model = genai.GenerativeModel("gemini-2.0-flash")  # Use the correct model name
 
 # Initialize Flask app
 app = Flask(__name__)
