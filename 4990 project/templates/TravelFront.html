@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
             height: 100vh;
             background-color: hsl(300, 24%, 71%);
         }
+
         .container {
             text-align: center;
             background: #f8efff;
@@ -24,13 +26,17 @@
             width: 100%;
             max-width: 600px;
         }
+
         .logo {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
             color: #C8A2C8;
         }
-        input, select, textarea {
+
+        input,
+        select,
+        textarea {
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -38,21 +44,29 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
+
         .checkbox-group {
             display: flex;
-            flex-wrap: wrap; /* Ensures they wrap if the row is too long */
-            gap: 15px; /* Adds space between checkbox-label pairs */
-            justify-content: flex-start; /* Aligns items to the left */
+            flex-wrap: wrap;
+            /* Ensures they wrap if the row is too long */
+            gap: 15px;
+            /* Adds space between checkbox-label pairs */
+            justify-content: flex-start;
+            /* Aligns items to the left */
             margin-bottom: 20px;
         }
+
         .checkbox-group label {
             display: flex;
             align-items: center;
             font-size: 16px;
         }
+
         .checkbox-group input[type="checkbox"] {
-            margin-right: 10px; /* Space between checkbox and label text */
+            margin-right: 10px;
+            /* Space between checkbox and label text */
         }
+
         button {
             background-color: #C8A2C8;
             color: white;
@@ -62,9 +76,11 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #C8A2C8;
         }
+
         .result {
             margin-top: 20px;
             text-align: left;
@@ -78,14 +94,26 @@
             background-color: #e4d4ef;
         }
     </style>
+
 </head>
+
 <body>
     <div class="container">
         <div class="logo">Travel Itinerary Generator</div>
-        
+
         <!-- Search Bar -->
         <input type="text" id="destination" placeholder="Where are you going?">
-        
+
+        <script>
+            var sel = document.createElement("select");
+            sel.options[0] = new Option('How many days?', 0);
+            for (var i = 1; i < 101; i++) {
+                sel.options[i] = new Option(i, i);
+            }
+            sel.setAttribute("id", "dynamic-select"); // Add an ID for styling or reference
+            document.querySelector('.container').appendChild(sel);
+        </script>
+
         <!-- Dropdown Menu for season -->
         <select id="season">
             <option value="" disabled selected>Select the season</option>
@@ -94,8 +122,6 @@
             <option value="summer">Summer</option>
             <option value="fall">Fall</option>
         </select>
-
-    
 
         <!-- Textarea for Details -->
         <textarea id="details" placeholder="Any specific activities you want to do?"></textarea>
@@ -106,24 +132,26 @@
             <label><input type="checkbox" value="21 and Over Trip" class="trip-type"> 21+</label>
             <label><input type="checkbox" value="Adventure Trip" class="trip-type"> Adventure</label>
             <label><input type="checkbox" value="Relaxation Trip" class="trip-type"> Relaxation</label>
-        </div>        
+        </div>
 
         <button id="generate-btn">Generate Itinerary</button>
         <div class="result" id="result"></div>
+        
     </div>
+  
     <script>
         document.getElementById('generate-btn').addEventListener('click', async () => {
             const destination = document.getElementById('destination').value;
             const season = document.getElementById('season').value;
             const details = document.getElementById('details').value;
-            
+
             // Collect all checked trip types
             const tripTypes = Array.from(document.querySelectorAll('.trip-type:checked'))
-                                    .map(checkbox => checkbox.value)
-                                    .join(', ');
-            
+                .map(checkbox => checkbox.value)
+                .join(', ');
+
             const resultDiv = document.getElementById('result');
-            
+
             // Validate inputs
             if (!destination || !season) {
                 resultDiv.textContent = 'Please fill out all required fields: destination and season.';
@@ -160,4 +188,5 @@
         });
     </script>
 </body>
+
 </html>
