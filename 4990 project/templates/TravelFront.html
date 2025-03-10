@@ -110,7 +110,7 @@
             for (var i = 1; i < 101; i++) {
                 sel.options[i] = new Option(i, i);
             }
-            sel.setAttribute("id", "days"); // Add an ID for styling or reference
+            sel.setAttribute("id", "dynamic-select"); // Add an ID for styling or reference
             document.querySelector('.container').appendChild(sel);
         </script>
 
@@ -154,7 +154,7 @@
             const resultDiv = document.getElementById('result');
         
             // Validate inputs
-            if (!destination || !season || !days) {
+            if (!destination || !season) {
                 resultDiv.textContent = 'Please fill out all required fields: destination, season, and days.';
                 return;
             }
@@ -163,7 +163,7 @@
             const input = `
                 Destination: ${destination}
                 Season: ${season}
-                Days: ${days}
+                Days: ${dynamic-select}
                 Details: ${details || 'No additional'}
                 Trip Types: ${tripTypes || 'No specific trip types'}
             `;
