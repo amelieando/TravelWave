@@ -154,7 +154,7 @@
             const resultDiv = document.getElementById('result');
 
             // Validate inputs
-            if (!destination || !season) {
+            if (!destination || !season || !days) {
                 resultDiv.textContent = 'Please fill out all required fields: destination and season.';
                 return;
             }
