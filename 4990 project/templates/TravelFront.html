@@ -104,13 +104,13 @@
         <!-- Search Bar -->
         <input type="text" id="destination" placeholder="Where are you going?">
 
-        <script id="days">
+        <script>
             var sel = document.createElement("select");
             sel.options[0] = new Option('How many days?', 0);
             for (var i = 1; i < 101; i++) {
                 sel.options[i] = new Option(i, i);
             }
-            sel.setAttribute("id", "dynamic-select"); // Add an ID for styling or reference
+            sel.setAttribute("id", "days"); // Add an ID for styling or reference
             document.querySelector('.container').appendChild(sel);
         </script>
 
