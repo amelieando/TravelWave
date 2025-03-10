@@ -104,7 +104,7 @@
         <!-- Search Bar -->
         <input type="text" id="destination" placeholder="Where are you going?">
 
-        <script>
+        <script id="days">
             var sel = document.createElement("select");
             sel.options[0] = new Option('How many days?', 0);
             for (var i = 1; i < 101; i++) {
@@ -144,6 +144,7 @@
             const destination = document.getElementById('destination').value;
             const season = document.getElementById('season').value;
             const details = document.getElementById('details').value;
+            const days = document.getElementById('days'). value;
 
             // Collect all checked trip types
             const tripTypes = Array.from(document.querySelectorAll('.trip-type:checked'))
@@ -162,6 +163,7 @@
             const input = `
                 Destination: ${destination}
                 Season: ${season}
+                Days: ${days}
                 Details: ${details || 'No additional details'}
                 Trip Types: ${tripTypes || 'No specific trip types'}
             `;
