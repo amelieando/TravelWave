@@ -14,7 +14,21 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: hsl(300, 24%, 71%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 3s ease-in-out;
         }
 
         .container {
@@ -48,11 +62,8 @@
         .checkbox-group {
             display: flex;
             flex-wrap: wrap;
-            /* Ensures they wrap if the row is too long */
             gap: 15px;
-            /* Adds space between checkbox-label pairs */
             justify-content: flex-start;
-            /* Aligns items to the left */
             margin-bottom: 20px;
         }
 
@@ -64,7 +75,6 @@
 
         .checkbox-group input[type="checkbox"] {
             margin-right: 10px;
-            /* Space between checkbox and label text */
         }
 
         button {
@@ -94,7 +104,6 @@
             background-color: #e4d4ef;
         }
     </style>
-
 </head>
 
 <body>
@@ -110,7 +119,7 @@
             for (var i = 1; i < 101; i++) {
                 sel.options[i] = new Option(i, i);
             }
-            sel.setAttribute("id", "dynamic-select"); // Add an ID for styling or reference
+            sel.setAttribute("id", "days");
             document.querySelector('.container').appendChild(sel);
         </script>
 
@@ -136,49 +145,103 @@
 
         <button id="generate-btn">Generate Itinerary</button>
         <div class="result" id="result"></div>
-        
     </div>
-  
+
     <script>
-       document.getElementById('generate-btn').addEventListener('click', async () => {
+        const images = [
+            "{{ url_for('static', filename='imgs/img1.jpg') }}",
+            "{{ url_for('static', filename='imgs/img2.jpg') }}",
+            "{{ url_for('static', filename='imgs/img3.jpg') }}",
+            "{{ url_for('static', filename='imgs/img4.jpg') }}",
+            "{{ url_for('static', filename='imgs/img5.jpg') }}",
+            "{{ url_for('static', filename='imgs/img6.jpg') }}",
+            "{{ url_for('static', filename='imgs/img7.jpg') }}",
+            "{{ url_for('static', filename='imgs/img8.jpg') }}",
+            "{{ url_for('static', filename='imgs/img9.jpg') }}",
+            "{{ url_for('static', filename='imgs/img10.jpg') }}",
+            "{{ url_for('static', filename='imgs/img11.jpg') }}",
+            "{{ url_for('static', filename='imgs/img12.jpg') }}",
+            "{{ url_for('static', filename='imgs/img13.jpg') }}",
+            "{{ url_for('static', filename='imgs/img14.jpg') }}",
+            "{{ url_for('static', filename='imgs/img15.jpg') }}",
+            "{{ url_for('static', filename='imgs/img16.jpg') }}",
+            "{{ url_for('static', filename='imgs/img17.jpg') }}",
+            "{{ url_for('static', filename='imgs/img18.jpg') }}",
+            "{{ url_for('static', filename='imgs/img19.jpg') }}",
+            "{{ url_for('static', filename='imgs/img20.jpg') }}"
+        ];
+
+        let currentIndex = 0;
+        const backgroundElement = document.createElement('div');
+        backgroundElement.classList.add('background');
+        backgroundElement.style.backgroundImage = `url(${images[currentIndex]})`;
+        document.body.appendChild(backgroundElement);
+
+        function changeBackground() {
+            backgroundElement.style.opacity = '0';
+
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % images.length;
+                backgroundElement.style.backgroundImage = `url(${images[currentIndex]})`;
+                backgroundElement.style.opacity = '1';
+            }, 2000); // Match the transition duration
+        }
+
+        // Preload all images
+        let loadedImages = 0;
+        images.forEach(src => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+                loadedImages++;
+                if (loadedImages === images.length) {
+                    console.log('All images preloaded successfully.');
+                    setInterval(changeBackground, 5000); // Start animation after preloading
+                }
+            };
+            img.onerror = () => {
+                console.error('Failed to load image:', src);
+            };
+        });
+    </script>
+
+    <script>
+        document.getElementById('generate-btn').addEventListener('click', async () => {
             const destination = document.getElementById('destination').value;
             const season = document.getElementById('season').value;
             const details = document.getElementById('details').value;
-            const days = document.getElementById('dynamic-select').value; // Corrected this line
-        
-            // Collect all checked trip types
+            const days = document.getElementById('days').value;
+
             const tripTypes = Array.from(document.querySelectorAll('.trip-type:checked'))
                 .map(checkbox => checkbox.value)
                 .join(', ');
-        
+
             const resultDiv = document.getElementById('result');
-        
-            // Validate inputs
+
             if (!destination || !season) {
-                resultDiv.textContent = 'Please fill out all required fields: destination, season, and days.';
+                resultDiv.textContent = 'Please fill out all required fields: destination and season.';
                 return;
             }
-        
-            // Combine all input data
+
             const input = `
                 Destination: ${destination}
                 Season: ${season}
-                Days: ${dynamic-select}
-                Details: ${details || 'No additional'}
+                Days: ${days}
+                Details: ${details || 'No additional details'}
                 Trip Types: ${tripTypes || 'No specific trip types'}
             `;
-        
+
             resultDiv.textContent = 'Generating itinerary...';
-        
+
             try {
                 const response = await fetch('/generate-itinerary', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ vacay_description: input })
                 });
-        
+
                 const data = await response.json();
-        
+
                 if (response.ok) {
                     resultDiv.textContent = data.travel_prompt;
                 } else {
