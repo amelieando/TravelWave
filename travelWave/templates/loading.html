@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Loading Your Dream Trip - Travel Itinerary Planner{% endblock %}
+
+{% block content %}
+<div class="loading-page">
+    <div class="loading-container">
+        <div class="loading-content">
+            <div class="loading-icon">
+                <i class="fas fa-globe-americas spinning"></i>
+            </div>
+            
+            <h2 class="loading-title">dream travel plan loading<span class="loading-dots">
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+            </span></h2>
+            
+            <div class="loading-steps">
+                <div class="step active">
+                    <i class="fas fa-search me-2"></i>
+                    <span>Finding amazing destinations</span>
+                </div>
+                <div class="step">
+                    <i class="fas fa-route me-2"></i>
+                    <span>Creating your itinerary</span>
+                </div>
+                <div class="step">
+                    <i class="fas fa-check me-2"></i>
+                    <span>Finalizing your plan</span>
+                </div>
+            </div>
+            
+            <div class="progress-container mt-4">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Loading page functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeLoadingPage();
+    });
+</script>
+{% endblock %}

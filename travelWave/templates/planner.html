@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Planner - Travel Itinerary Planner{% endblock %}
+
+{% block content %}
+<div class="planner-page">
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <!-- Left Side - Input Form -->
+            <div class="col-lg-6 input-section">
+                <div class="input-container">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-map-marked-alt me-2"></i>
+                            Plan Your Trip
+                        </h2>
+                        <p class="text-muted">Tell us about your dream destination and preferences</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('create_itinerary') }}" class="trip-form">
+                        <!-- Destination -->
+                        <div class="form-group mb-4">
+                            <label for="destination" class="form-label">
+                                <i class="fas fa-globe me-2"></i>Destination
+                            </label>
+                            <input type="text" class="form-control" id="destination" name="destination" 
+                                   placeholder="Where do you want to go?" required>
+                        </div>
+
+                        <!-- Travel Dates -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="start_date" class="form-label">
+                                    <i class="fas fa-calendar-alt me-2"></i>Start Date
+                                </label>
+                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="end_date" class="form-label">
+                                    <i class="fas fa-calendar-check me-2"></i>End Date
+                                </label>
+                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                            </div>
+                        </div>
+
+                        <!-- Number of Travelers -->
+                        <div class="form-group mb-4">
+                            <label for="travelers" class="form-label">
+                                <i class="fas fa-users me-2"></i>Number of Travelers
+                            </label>
+                            <select class="form-control" id="travelers" name="travelers">
+                                <option value="1">1 Person</option>
+                                <option value="2">2 People</option>
+                                <option value="3">3 People</option>
+                                <option value="4">4 People</option>
+                                <option value="5">5+ People</option>
+                            </select>
+                        </div>
+
+                        <!-- Budget -->
+                        <div class="form-group mb-4">
+                            <label for="budget" class="form-label">
+                                <i class="fas fa-dollar-sign me-2"></i>Budget Range
+                            </label>
+                            <select class="form-control" id="budget" name="budget">
+                                <option value="">Select budget range</option>
+                                <option value="Budget ($0-$1000)">Budget ($0-$1000)</option>
+                                <option value="Mid-range ($1000-$3000)">Mid-range ($1000-$3000)</option>
+                                <option value="Luxury ($3000+)">Luxury ($3000+)</option>
+                            </select>
+                        </div>
+
+                        <!-- Accommodation Type -->
+                        <div class="form-group mb-4">
+                            <label for="accommodation_type" class="form-label">
+                                <i class="fas fa-bed me-2"></i>Accommodation Type
+                            </label>
+                            <select class="form-control" id="accommodation_type" name="accommodation_type">
+                                <option value="">Select accommodation type</option>
+                                <option value="Hotel">Hotel</option>
+                                <option value="Resort">Resort</option>
+                                <option value="Hostel">Hostel</option>
+                                <option value="Apartment/Airbnb">Apartment/Airbnb</option>
+                                <option value="Boutique Hotel">Boutique Hotel</option>
+                            </select>
+                        </div>
+
+                        <!-- Transportation -->
+                        <div class="form-group mb-4">
+                            <label for="transportation" class="form-label">
+                                <i class="fas fa-plane me-2"></i>Transportation
+                            </label>
+                            <select class="form-control" id="transportation" name="transportation">
+                                <option value="">Select transportation</option>
+                                <option value="Flight">Flight</option>
+                                <option value="Train">Train</option>
+                                <option value="Car">Car</option>
+                                <option value="Bus">Bus</option>
+                                <option value="Mixed">Mixed Transportation</option>
+                            </select>
+                        </div>
+
+                        <!-- Interests -->
+                        <div class="form-group mb-4">
+                            <label for="interests" class="form-label">
+                                <i class="fas fa-heart me-2"></i>Interests & Preferences
+                            </label>
+                            <textarea class="form-control" id="interests" name="interests" rows="3" 
+                                      placeholder="Tell us about your interests (culture, food, nature, adventure, relaxation, etc.)"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-magic me-2"></i>
+                                Create My Itinerary
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Side - Output -->
+            <div class="col-lg-6 output-section">
+                <div class="output-container">
+                    {% if itinerary %}
+                        <div class="itinerary-output">
+                            <div class="section-header">
+                                <h2>
+                                    <i class="fas fa-route me-2"></i>
+                                    Your Itinerary
+                                </h2>
+                                <button class="btn btn-outline-primary btn-sm" onclick="printItinerary()">
+                                    <i class="fas fa-print me-1"></i>Print
+                                </button>
+                            </div>
+                            <div class="itinerary-content">
+                                {{ itinerary.itinerary_content|safe }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-state-content">
+                                <i class="fas fa-map fa-4x mb-4 text-muted"></i>
+                                <h3>Your Itinerary Will Appear Here</h3>
+                                <p class="text-muted">Fill out the form on the left to generate your personalized travel itinerary</p>
+                                
+                                <div class="preview-features">
+                                    <div class="feature-list">
+                                        <div class="feature-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Day-by-day planning
+                                        </div>
+                                        <div class="feature-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Activity recommendations
+                                        </div>
+                                        <div class="feature-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Travel tips included
+                                        </div>
+                                        <div class="feature-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Customized to your interests
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Button -->
+<div class="navigation-button">
+    <a href="{{ url_for('index') }}" class="btn btn-outline-light">
+        <i class="fas fa-home me-2"></i>Back to Home
+    </a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Set minimum date to today
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('start_date').setAttribute('min', today);
+        document.getElementById('end_date').setAttribute('min', today);
+        
+        // Update end date minimum when start date changes
+        document.getElementById('start_date').addEventListener('change', function() {
+            document.getElementById('end_date').setAttribute('min', this.value);
+        });
+    });
+
+    function printItinerary() {
+        const itineraryContent = document.querySelector('.itinerary-content').innerHTML;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Travel Itinerary</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .trip-overview { margin-bottom: 20px; }
+                        .day-plan { margin: 20px 0; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+                        .activity { margin: 10px 0; display: flex; }
+                        .time { font-weight: bold; width: 100px; }
+                        .description { flex: 1; }
+                        h3, h4, h5 { color: #333; }
+                    </style>
+                </head>
+                <body>
+                    ${itineraryContent}
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+</script>
+{% endblock %}
