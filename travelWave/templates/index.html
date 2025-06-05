@@ -7,9 +7,12 @@
     <!-- Slideshow Background -->
     <div class="slideshow-container">
         {% for image in slideshow_images %}
-        <div class="slide {% if loop.first %}active{% endif %}" style="background-image: url('{{ image }}')"></div>
+            <div class="slide {% if loop.first %}active{% endif %}"
+                style="background-image: url('{{ url_for('static', filename=image) }}');">
+            </div>
         {% endfor %}
     </div>
+
 
     <!-- Overlay Content -->
     <div class="landing-overlay">
