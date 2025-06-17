@@ -54,4 +54,60 @@
 {% endblock %}
 
 {% block scripts %}
+{% endblock %}{% extends "base.html" %}
+
+{% block title %}Saved Trips - Travel Itinerary Planner{% endblock %}
+
+{% block content %}
+<div class="saved-trips-page">
+    <div class="container">
+        <h1 class="mb-5">Your Saved Trip Plans</h1>
+
+        {% if trips %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for trip in trips %}
+                <div class="col">
+                    <div class="trip-card h-100">
+                        <div class="trip-card-header">
+                            <span>{{ trip.destination }}</span>
+                            <small class="text-white-50">
+                                {{ (trip.end_date - trip.start_date).days }} Day Trip
+                            </small>
+                        </div>
+                        <div class="trip-card-body">
+                            <p><strong>Dates:</strong> {{ trip.start_date.strftime('%b %d, %Y') }} - {{ trip.end_date.strftime('%b %d, %Y') }}</p>
+                            <p><strong>Travelers:</strong> {{ trip.travelers }}</p>
+                            {% if trip.budget %}<p><strong>Budget:</strong> {{ trip.budget }}</p>{% endif %}
+                            {% if trip.accommodation_type %}<p><strong>Accommodation:</strong> {{ trip.accommodation_type }}</p>{% endif %}
+                            {% if trip.transportation %}<p><strong>Transportation:</strong> {{ trip.transportation }}</p>{% endif %}
+                            {% if trip.interests %}<p><strong>Interests:</strong> {{ trip.interests }}</p>{% endif %}
+                            <div class="mt-3">
+                                <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#itinerary-{{ trip.id }}" aria-expanded="false" aria-controls="itinerary-{{ trip.id }}">
+                                    View Itinerary Details
+                                </button>
+                                <div class="collapse mt-3" id="itinerary-{{ trip.id }}">
+                                    <div class="card card-body itinerary-preview-card">
+                                        {{ trip.itinerary_content | safe }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trip-card-footer">
+                            Saved on: {{ trip.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                No saved trips found. Start planning your first trip!
+                <a href="{{ url_for('planner') }}" class="alert-link">Plan a New Trip</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
 {% endblock %}
