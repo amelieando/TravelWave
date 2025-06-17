@@ -123,9 +123,9 @@ def create_itinerary():
             show_sidebar=True
         )
 
-    # Generate itinerary content (simplified for now, as per original code)
-    itinerary_html = generate_basic_itinerary_html(
-        destination, start_date, end_date, travelers, budget, accommodation_type, transportation, interests
+    # Call the AI itinerary generation function
+    itinerary_html = generate_ai_itinerary(
+        destination, start_date, end_date, travelers, budget, interests, accommodation_type, transportation
     )
 
     # Save the trip to the database
@@ -163,7 +163,57 @@ def saved_trips():
     trips = TripItinerary.query.order_by(TripItinerary.created_at.desc()).all()
     return render_template("saved_trips.html", trips=trips, show_sidebar=True)
 
-def generate_basic_itinerary_html(
+# User's provided AI Itinerary Generation Function
+def generate_ai_itinerary(destination, start_date, end_date, travelers, budget, interests, accommodation_type, transportation):
+    """Generate a detailed travel itinerary using Google Gemini AI"""
+    
+    try:
+        duration = (end_date - start_date).days
+        
+        # Create a detailed prompt for the AI
+        prompt = f"""
+        Create a detailed, personalized travel itinerary for a {duration}-day trip to {destination}.
+        
+        Trip Details:
+        - Destination: {destination}
+        - Travel Dates: {start_date.strftime('%B %d, %Y')} to {end_date.strftime('%B %d, %Y')}
+        - Number of Travelers: {travelers}
+        - Budget: {budget if budget else 'Not specified'}
+        - Accommodation Type: {accommodation_type if accommodation_type else 'Not specified'}
+        - Transportation: {transportation if transportation else 'Not specified'}
+        - Interests: {interests if interests else 'General sightseeing'}
+        
+        Please provide a comprehensive itinerary that includes:
+        1. You are a pro experienced traveler who has traveled to every place in the world and has all the recommendations possible for people who need ideas for a trip.
+        2. Create a trip overview with key highlights for must do activities
+        3. Day-by-day detailed schedule with morning, afternoon, and evening activities listing recomended places to go and what to do based off of the users desires and {destination}, also add time stamps for everything
+        4. In the detailed day-by-day schedule add specific restaurant recommendations for meals, and mention what kind of restaurant they are
+        5. List cultural attractions and activities based on their interests
+        6. Practical travel tips specific to {destination}
+        7. Estimated costs where possible, stop writting after this.
+
+        
+        Format the response in HTML with proper headings, lists, and structure that will look good on a website.
+        Use <h3>, <h4>, <h5> for headings, <p> for paragraphs, <ul>/<li> for lists, and <div> with appropriate classes.
+        Make it engaging and informative! 
+        """
+        
+        # Generate content using Gemini AI
+        response = model.generate_content(prompt)
+        
+        if response and response.text:
+            return response.text
+        else:
+            # Fallback to basic itinerary if AI fails
+            return generate_fallback_itinerary(destination, start_date, end_date, travelers, budget, interests, accommodation_type, transportation)
+            
+    except Exception as e:
+        logging.error(f"Error generating AI itinerary: {str(e)}")
+        # Fallback to basic itinerary if AI fails
+        return generate_fallback_itinerary(destination, start_date, end_date, travelers, budget, interests, accommodation_type, transportation)
+
+# Fallback itinerary function (previously generate_basic_itinerary_html)
+def generate_fallback_itinerary(
     destination,
     start_date,
     end_date,
@@ -173,7 +223,7 @@ def generate_basic_itinerary_html(
     transportation,
     interests,
 ):
-    """Generates a basic HTML itinerary based on user input."""
+    """Generates a basic HTML itinerary as a fallback."""
     duration = (end_date - start_date).days
     
     return f"""
@@ -188,7 +238,7 @@ def generate_basic_itinerary_html(
     </div>
     
     <div class="ai-notice">
-        <p><em>Note: This is a basic itinerary. AI-generated content is temporarily unavailable.</em></p>
+        <p><em>Note: AI-generated content is temporarily unavailable. This is a basic itinerary fallback.</em></p>
     </div>
     
     <h4>Basic Daily Itinerary</h4>
