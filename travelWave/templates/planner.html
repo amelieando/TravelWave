@@ -6,7 +6,6 @@
 <div class="planner-page">
     <div class="container-fluid h-100">
         <div class="row h-100">
-            <!-- Left Side - Input Form -->
             <div class="col-lg-6 input-section">
                 <div class="input-container">
                     <div class="section-header">
@@ -18,173 +17,119 @@
                     </div>
 
                     <form method="POST" action="{{ url_for('create_itinerary') }}" class="trip-form">
-                        <!-- Destination -->
                         <div class="form-group mb-4">
                             <label for="destination" class="form-label">
                                 <i class="fas fa-globe me-2"></i>Destination
                             </label>
                             <input type="text" class="form-control" id="destination" name="destination" 
-                                   placeholder="Where do you want to go?" required>
+                                   placeholder="Where do you want to go?" required value="{{ destination }}">
                         </div>
 
-                        <!-- Travel Dates -->
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <label for="start_date" class="form-label">
                                     <i class="fas fa-calendar-alt me-2"></i>Start Date
                                 </label>
-                                <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                <input type="date" class="form-control" id="start_date" name="start_date" required value="{{ start_date }}">
                             </div>
                             <div class="col-md-6">
                                 <label for="end_date" class="form-label">
-                                    <i class="fas fa-calendar-check me-2"></i>End Date
+                                    <i class="fas fa-calendar-alt me-2"></i>End Date
                                 </label>
-                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                <input type="date" class="form-control" id="end_date" name="end_date" required value="{{ end_date }}">
                             </div>
                         </div>
 
-                        <!-- Number of Travelers -->
                         <div class="form-group mb-4">
                             <label for="travelers" class="form-label">
                                 <i class="fas fa-users me-2"></i>Number of Travelers
                             </label>
-                            <select class="form-control" id="travelers" name="travelers">
-                                <option value="1">1 Person</option>
-                                <option value="2">2 People</option>
-                                <option value="3">3 People</option>
-                                <option value="4">4 People</option>
-                                <option value="5">5+ People</option>
-                            </select>
+                            <input type="number" class="form-control" id="travelers" name="travelers" min="1" value="{{ travelers }}" required>
                         </div>
 
-                        <!-- Budget -->
                         <div class="form-group mb-4">
                             <label for="budget" class="form-label">
-                                <i class="fas fa-dollar-sign me-2"></i>Budget Range
+                                <i class="fas fa-money-bill-wave me-2"></i>Budget (Optional)
                             </label>
-                            <select class="form-control" id="budget" name="budget">
-                                <option value="">Select budget range</option>
-                                <option value="Budget ($0-$1000)">Budget ($0-$1000)</option>
-                                <option value="Mid-range ($1000-$3000)">Mid-range ($1000-$3000)</option>
-                                <option value="Luxury ($3000+)">Luxury ($3000+)</option>
+                            <select class="form-select" id="budget" name="budget">
+                                <option value="" {% if not budget %}selected{% endif %}>Select budget range</option>
+                                <option value="Low" {% if budget == "Low" %}selected{% endif %}>Low</option>
+                                <option value="Medium" {% if budget == "Medium" %}selected{% endif %}>Medium</option>
+                                <option value="High" {% if budget == "High" %}selected{% endif %}>High</option>
                             </select>
                         </div>
 
-                        <!-- Accommodation Type -->
                         <div class="form-group mb-4">
                             <label for="accommodation_type" class="form-label">
-                                <i class="fas fa-bed me-2"></i>Accommodation Type
+                                <i class="fas fa-hotel me-2"></i>Accommodation Type (Optional)
                             </label>
-                            <select class="form-control" id="accommodation_type" name="accommodation_type">
-                                <option value="">Select accommodation type</option>
-                                <option value="Hotel">Hotel</option>
-                                <option value="Resort">Resort</option>
-                                <option value="Hostel">Hostel</option>
-                                <option value="Apartment/Airbnb">Apartment/Airbnb</option>
-                                <option value="Boutique Hotel">Boutique Hotel</option>
-                            </select>
+                            <input type="text" class="form-control" id="accommodation_type" name="accommodation_type" 
+                                   placeholder="e.g., Hotel, Hostel, Airbnb" value="{{ accommodation_type }}">
                         </div>
 
-                        <!-- Transportation -->
                         <div class="form-group mb-4">
                             <label for="transportation" class="form-label">
-                                <i class="fas fa-plane me-2"></i>Transportation
+                                <i class="fas fa-car me-2"></i>Transportation (Optional)
                             </label>
-                            <select class="form-control" id="transportation" name="transportation">
-                                <option value="">Select transportation</option>
-                                <option value="Flight">Flight</option>
-                                <option value="Train">Train</option>
-                                <option value="Car">Car</option>
-                                <option value="Bus">Bus</option>
-                                <option value="Mixed">Mixed Transportation</option>
-                            </select>
+                            <input type="text" class="form-control" id="transportation" name="transportation" 
+                                   placeholder="e.g., Flights, Train, Rental Car" value="{{ transportation }}">
                         </div>
 
-                        <!-- Interests -->
                         <div class="form-group mb-4">
                             <label for="interests" class="form-label">
-                                <i class="fas fa-heart me-2"></i>Interests & Preferences
+                                <i class="fas fa-heart me-2"></i>Interests (Optional)
                             </label>
                             <textarea class="form-control" id="interests" name="interests" rows="3" 
-                                      placeholder="Tell us about your interests (culture, food, nature, adventure, relaxation, etc.)"></textarea>
+                                      placeholder="e.g., historical sites, beaches, food tours">{{ interests }}</textarea>
                         </div>
 
-                        <!-- Submit Button -->
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="fas fa-magic me-2"></i>
-                                Create My Itinerary
-                            </button>
-                        </div>
+                        <button type="submit" class="btn btn-primary w-100 generate-itinerary-btn">
+                            Generate Itinerary <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
                     </form>
                 </div>
             </div>
 
-            <!-- Right Side - Output -->
             <div class="col-lg-6 output-section">
                 <div class="output-container">
-                    {% if itinerary %}
-                        <div class="itinerary-output">
-                            <div class="section-header">
-                                <h2>
-                                    <i class="fas fa-route me-2"></i>
-                                    Your Itinerary
-                                </h2>
-                                <button class="btn btn-outline-primary btn-sm" onclick="printItinerary()">
-                                    <i class="fas fa-print me-1"></i>Print
-                                </button>
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-route me-2"></i>
+                            Your Itinerary
+                        </h2>
+                        <p class="text-muted">Your personalized travel plan will appear here</p>
+                    </div>
+
+                    <div class="itinerary-content">
+                        {% if itinerary_html %}
+                            {{ itinerary_html | safe }}
+                        {% else %}
+                            <div class="no-itinerary-message">
+                                <p>Fill out the form on the left and click "Generate Itinerary" to see your dream trip come to life!</p>
                             </div>
-                            <div class="itinerary-content">
-                                {{ itinerary.itinerary_content|safe }}
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="empty-state">
-                            <div class="empty-state-content">
-                                <i class="fas fa-map fa-4x mb-4 text-muted"></i>
-                                <h3>Your Itinerary Will Appear Here</h3>
-                                <p class="text-muted">Fill out the form on the left to generate your personalized travel itinerary</p>
-                                
-                                <div class="preview-features">
-                                    <div class="feature-list">
-                                        <div class="feature-item">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Day-by-day planning
-                                        </div>
-                                        <div class="feature-item">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Activity recommendations
-                                        </div>
-                                        <div class="feature-item">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Travel tips included
-                                        </div>
-                                        <div class="feature-item">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Customized to your interests
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if itinerary_html %}
+                    <div class="itinerary-actions mt-4">
+                        <button class="btn btn-outline-secondary me-2" onclick="printItinerary()">
+                            <i class="fas fa-print me-2"></i>Print Itinerary
+                        </button>
+                        <a href="{{ url_for('planner') }}" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Create New Trip Plan
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Navigation Button -->
-<div class="navigation-button">
-    <a href="{{ url_for('index') }}" class="btn btn-outline-light">
-        <i class="fas fa-home me-2"></i>Back to Home
-    </a>
-</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Set minimum date to today
+    // Date picker logic
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('start_date').setAttribute('min', today);
@@ -193,6 +138,10 @@
         // Update end date minimum when start date changes
         document.getElementById('start_date').addEventListener('change', function() {
             document.getElementById('end_date').setAttribute('min', this.value);
+            // If end date is earlier than new start date, reset it
+            if (this.value > document.getElementById('end_date').value) {
+                document.getElementById('end_date').value = this.value;
+            }
         });
     });
 
@@ -211,6 +160,8 @@
                         .time { font-weight: bold; width: 100px; }
                         .description { flex: 1; }
                         h3, h4, h5 { color: #333; }
+                        .ai-notice { font-style: italic; color: #888; margin-top: 15px; }
+                        .travel-tips { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
                     </style>
                 </head>
                 <body>
