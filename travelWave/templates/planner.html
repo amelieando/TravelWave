@@ -1,751 +1,176 @@
-/* Custom CSS Variables */
-:root {
-    --primary-color: 220 100% 50%; /* #0066FF */
-    --secondary-color: 200 100% 40%; /* #0099CC */
-    --accent-color: 280 100% 70%; /* #CC66FF */
-    --background-light: 210 11% 98%; /* #F5F7FA */
-    --text-dark: 220 20% 20%; /* #2C3E50 */
-    --text-muted: 220 10% 60%; /* #7F8C8D */
-    --success-color: 140 80% 45%; /* #27AE60 */
-    --white: 0 0% 100%; /* #FFFFFF */
-    --shadow: 220 20% 20%; /* #2C3E50 */
-    --sidebar-width: 250px;
-    --navbar-height: 60px; /* Approximate height of the sidebar toggle navbar */
-}
-
-/* Global Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
-    color: hsl(var(--text-dark));
-    background-color: hsl(var(--background-light));
-    overflow-x: hidden; /* Prevent horizontal scroll due to sidebar */
-}
-
-/* Base Layout with Sidebar */
-#wrapper {
-    display: flex;
-    /* transition: all 0.3s ease; -- This transition causes flickering, better to apply only to specific elements */
-}
-
-/* Adjust page content when sidebar is toggled open */
-#wrapper.toggled #sidebar-wrapper {
-    margin-left: 0;
-}
-
-#wrapper.toggled #page-content-wrapper {
-    margin-left: var(--sidebar-width);
-}
-
-/* Sidebar Styles */
-#sidebar-wrapper {
-    min-height: 100vh;
-    margin-left: calc(-1 * var(--sidebar-width));
-    transition: margin 0.3s ease; /* Apply transition here for smooth slide */
-    background-color: hsl(var(--text-dark));
-    color: hsl(var(--white));
-    width: var(--sidebar-width);
-    position: fixed;
-    z-index: 1000;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar-heading {
-    padding: 1.5rem 1rem;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: hsl(var(--primary-color));
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.list-group {
-    flex-grow: 1;
-    padding: 1rem 0;
-}
-
-.list-group-item {
-    background-color: transparent;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    color: rgba(255,255,255,0.8);
-    transition: all 0.2s ease;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-.list-group-item i {
-    margin-right: 10px;
-}
-
-.list-group-item:hover {
-    background-color: rgba(255,255,255,0.1);
-    color: hsl(var(--white));
-}
-
-.list-group-item.active {
-    background-color: hsl(var(--primary-color));
-    color: hsl(var(--white));
-}
-
-/* Page Content Wrapper (Main Content) */
-#page-content-wrapper {
-    flex-grow: 1;
-    padding-left: 0;
-    transition: margin 0.3s ease; /* Apply transition here for smooth push */
-    width: 100%;
-    min-height: 100vh; /* Ensure it takes full viewport height */
-    padding-top: 0; /* Default, will be overridden by JS if sidebar is present */
-}
-
-/* Top Navigation for Sidebar Toggle */
-.navbar-sidebar-toggle {
-    background-color: hsl(var(--white));
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    padding: 0.5rem 1rem;
-    position: fixed;
-    width: 100%;
-    z-index: 999;
-}
-
-.navbar-sidebar-toggle .btn-toggle-sidebar {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: hsl(var(--text-dark));
-    cursor: pointer;
-}
-
-/* When sidebar is visible, apply padding to page content */
-#wrapper.has-sidebar #page-content-wrapper {
-    padding-top: var(--navbar-height); /* Space for the fixed toggle bar */
-}
-
-/* Adjust main content padding when sidebar is open */
-/* This is controlled by JS adding/removing 'toggled' class */
-#wrapper.toggled #page-content-wrapper {
-    margin-left: var(--sidebar-width);
-}
-
-
-/* Content specific adjustments for landing and planner pages */
-.landing-page {
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-}
-
-/* Slideshow Background */
-.slideshow-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 0;
-}
-
-.slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 1.5s ease-in-out;
-}
-
-.slide.active {
-    opacity: 1;
-}
-
-/* Overlay Content */
-.landing-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(var(--white));
-    z-index: 1;
-}
-
-.hero-content {
-    animation: fadeInUp 1s ease-out;
-}
-
-.hero-title {
-    font-size: 4rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-}
-
-.hero-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 2.5rem;
-    opacity: 0.9;
-}
-
-.cta-section {
-    margin-top: 3rem;
-}
-
-.get-started-btn {
-    background-color: hsl(var(--primary-color));
-    border-color: hsl(var(--primary-color));
-    padding: 0.8rem 2.5rem;
-    font-size: 1.2rem;
-    border-radius: 50px;
-    transition: all 0.3s ease;
-}
-
-.get-started-btn:hover {
-    background-color: hsl(var(--secondary-color));
-    border-color: hsl(var(--secondary-color));
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Loading animation on landing page */
-.loading-text {
-    margin-top: 20px;
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.7);
-    display: none; /* Hidden by default */
-}
-
-.loading-text .dots .dot {
-    animation: blink 1.4s infinite;
-}
-
-.loading-text .dots .dot:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.loading-text .dots .dot:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-/* Loading Page Styles */
-.loading-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, hsl(var(--primary-color)) 0%, hsl(var(--secondary-color)) 100%);
-    color: hsl(var(--white));
-    text-align: center;
-}
-
-.loading-container {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.loading-icon .spinning {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    animation: spin 2s linear infinite;
-    color: hsl(var(--accent-color));
-}
-
-.loading-title {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    font-weight: 600;
-}
-
-.loading-dots .dot {
-    animation: blink 1.4s infinite;
-}
-
-.loading-dots .dot:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.loading-dots .dot:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-.loading-steps {
-    text-align: left;
-    margin: 0 auto 30px;
-    max-width: 400px;
-}
-
-.loading-steps .step {
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-}
-
-.loading-steps .step.active {
-    opacity: 1;
-    font-weight: bold;
-    color: hsl(var(--white));
-}
-
-.loading-steps .step i {
-    color: hsl(var(--accent-color));
-    width: 25px; /* Ensure consistent icon alignment */
-}
-
-.progress-container {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    height: 10px;
-    overflow: hidden;
-    margin: 0 auto;
-    max-width: 400px;
-}
-
-.progress-bar {
-    background-color: hsl(var(--accent-color));
-    height: 100%;
-    width: 0%;
-    transition: width 0.5s ease-in-out;
-    border-radius: 10px;
-}
-
-/* Planner Page Styles */
-.planner-page {
-    min-height: 100vh; /* Takes full height */
-    display: flex;
-    align-items: stretch; /* Stretch children to fill height */
-}
-
-/* Adjust planner page padding based on sidebar presence */
-#wrapper.has-sidebar .planner-page {
-    padding-top: var(--navbar-height); /* Space for the fixed toggle bar */
-}
-
-.planner-page .h-100 {
-    min-height: 100%; /* Ensure row takes full height of its parent */
-}
-
-.input-section, .output-section {
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    flex-grow: 1; /* Allow these columns to grow vertically */
-}
-
-.input-section {
-    background-color: hsl(var(--white));
-    border-right: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 0 15px rgba(0,0,0,0.05);
-}
-
-.output-section {
-    background-color: hsl(var(--background-light));
-    position: relative;
-}
-
-.input-container, .output-container {
-    padding: 2rem;
-    border-radius: 10px;
-    background-color: hsl(var(--white));
-    box-shadow: 0 4px 20px rgba(var(--shadow), 0.08);
-    flex-grow: 1; /* Allow content to grow within the column */
-    display: flex;
-    flex-direction: column;
-    /* Removed max-height from here to let it stretch naturally */
-}
-
-.output-container {
-    border: 1px solid #e0e0e0;
-}
-
-.section-header {
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.section-header h2 {
-    font-weight: 700;
-    color: hsl(var(--primary-color));
-    margin-bottom: 0.5rem;
-}
-
-.section-header p {
-    color: hsl(var(--text-muted));
-}
-
-.form-label {
-    font-weight: 600;
-    color: hsl(var(--text-dark));
-    margin-bottom: 0.5rem;
-}
-
-.form-control, .form-select, .form-check-input {
-    border-radius: 8px;
-    border: 1px solid #ced4da;
-    padding: 0.75rem 1rem;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: hsl(var(--primary-color));
-    box-shadow: 0 0 0 0.25rem hsla(var(--primary-color), 0.25);
-}
-
-.generate-itinerary-btn {
-    background-color: hsl(var(--primary-color));
-    border-color: hsl(var(--primary-color));
-    padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.generate-itinerary-btn:hover {
-    background-color: hsl(var(--secondary-color));
-    border-color: hsl(var(--secondary-color));
-}
-
-.itinerary-content {
-    flex-grow: 1; /* Allow content to take available space */
-    overflow-y: auto; /* Make this section scrollable */
-    padding-right: 15px; /* Space for scrollbar */
-    max-height: calc(100vh - var(--navbar-height) - 4rem - 8rem); /* Adjust based on viewport height, container padding, and header/footer space */
-    /* Calculation: 100vh (viewport height) 
-       - var(--navbar-height) (fixed top bar)
-       - 4rem (2 * 2rem padding on input/output-section)
-       - 8rem (approx space for section-header + itinerary-actions + margins/paddings within output-container)
-       You may need to fine-tune 8rem based on your specific content.
-    */
-}
-
-.itinerary-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.itinerary-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.itinerary-content::-webkit-scrollbar-thumb {
-    background: hsl(var(--primary-color));
-    border-radius: 10px;
-}
-
-.itinerary-content::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--secondary-color));
-}
-
-
-.no-itinerary-message {
-    text-align: center;
-    color: hsl(var(--text-muted));
-    padding: 3rem;
-    border: 2px dashed #e0e0e0;
-    border-radius: 10px;
-    margin-top: 2rem;
-}
-
-.itinerary-actions {
-    text-align: right;
-    margin-top: auto; /* Push to the bottom */
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
-}
-
-.itinerary-actions .btn {
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-size: 0.95rem;
-}
-
-/* Itinerary display styles */
-.trip-overview {
-    background-color: hsl(var(--background-light));
-    border-left: 5px solid hsl(var(--primary-color));
-    padding: 1rem 1.5rem;
-    margin-bottom: 2rem;
-    border-radius: 8px;
-}
-
-.trip-overview p {
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-}
-
-.trip-overview strong {
-    color: hsl(var(--text-dark));
-}
-
-.day-plan {
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.day-plan h5 {
-    color: hsl(var(--secondary-color));
-    margin-bottom: 1rem;
-    font-weight: 700;
-}
-
-.day-plan p {
-    margin-bottom: 0;
-}
-
-.activity {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 0.8rem;
-}
-
-.activity .time {
-    font-weight: bold;
-    color: hsl(var(--primary-color));
-    min-width: 80px;
-    margin-right: 15px;
-}
-
-.ai-notice {
-    background-color: #fff3cd;
-    border-left: 5px solid #ffc107;
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 1.5rem;
-    border-radius: 8px;
-    color: #664d03;
-    font-size: 0.9rem;
-}
-
-.travel-tips {
-    background-color: #e9f7ef;
-    border-left: 5px solid hsl(var(--success-color));
-    padding: 1rem 1.5rem;
-    margin-top: 2rem;
-    border-radius: 8px;
-}
-
-.travel-tips h4 {
-    color: hsl(var(--success-color));
-    margin-bottom: 1rem;
-}
-
-.travel-tips ul {
-    list-style-type: disc;
-    margin-left: 20px;
-    padding-left: 0;
-}
-
-.travel-tips li {
-    margin-bottom: 0.5rem;
-}
-
-/* Saved Trips Page */
-.saved-trips-page {
-    padding: 2rem;
-    /* Adjusted padding-top to account for the fixed navbar height */
-    padding-top: calc(2rem + var(--navbar-height)); 
-}
-
-.saved-trips-page h1 {
-    font-weight: 700;
-    color: hsl(var(--primary-color));
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.trip-card {
-    background-color: hsl(var(--white));
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.trip-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-}
-
-.trip-card-header {
-    background-color: hsl(var(--primary-color));
-    color: hsl(var(--white));
-    padding: 1rem 1.5rem;
-    font-size: 1.25rem;
-    font-weight: 600;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.trip-card-body {
-    padding: 1.5rem;
-    color: hsl(var(--text-dark));
-}
-
-.trip-card-body p {
-    margin-bottom: 0.5rem;
-}
-
-.trip-card-body strong {
-    color: hsl(var(--text-dark));
-}
-
-.trip-card-footer {
-    padding: 1rem 1.5rem;
-    background-color: hsl(var(--background-light));
-    border-top: 1px solid #eee;
-    font-size: 0.9rem;
-    color: hsl(var(--text-muted));
-}
-
-/* Buttons */
-.btn-primary {
-    background-color: hsl(var(--primary-color));
-    border-color: hsl(var(--primary-color));
-    color: hsl(var(--white));
-}
-
-.btn-primary:hover {
-    background-color: hsl(var(--secondary-color));
-    border-color: hsl(var(--secondary-color));
-    color: hsl(var(--white));
-}
-
-/* Flash Messages */
-.flash-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1050;
-    max-width: 400px;
-}
-
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
+{% extends "base.html" %}
+
+{% block title %}Trip Planner - Travel Itinerary Planner{% endblock %}
+
+{% block content %}
+<div class="planner-page">
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col-lg-6 input-section">
+                <div class="input-container">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-map-marked-alt me-2"></i>
+                            Plan Your Trip
+                        </h2>
+                        <p class="text-muted">Tell us about your dream destination and preferences</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('create_itinerary') }}" class="trip-form">
+                        <div class="form-group mb-4">
+                            <label for="destination" class="form-label">
+                                <i class="fas fa-globe me-2"></i>Destination
+                            </label>
+                            <input type="text" class="form-control" id="destination" name="destination" 
+                                   placeholder="Where do you want to go?" required value="{{ destination }}">
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="start_date" class="form-label">
+                                    <i class="fas fa-calendar-alt me-2"></i>Start Date
+                                </label>
+                                <input type="date" class="form-control" id="start_date" name="start_date" required value="{{ start_date }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="end_date" class="form-label">
+                                    <i class="fas fa-calendar-alt me-2"></i>End Date
+                                </label>
+                                <input type="date" class="form-control" id="end_date" name="end_date" required value="{{ end_date }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="travelers" class="form-label">
+                                <i class="fas fa-users me-2"></i>Number of Travelers
+                            </label>
+                            <input type="number" class="form-control" id="travelers" name="travelers" min="1" value="{{ travelers }}" required>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="budget" class="form-label">
+                                <i class="fas fa-money-bill-wave me-2"></i>Budget (Optional)
+                            </label>
+                            <select class="form-select" id="budget" name="budget">
+                                <option value="" {% if not budget %}selected{% endif %}>Select budget range</option>
+                                <option value="Low" {% if budget == "Low" %}selected{% endif %}>Low</option>
+                                <option value="Medium" {% if budget == "Medium" %}selected{% endif %}>Medium</option>
+                                <option value="High" {% if budget == "High" %}selected{% endif %}>High</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="accommodation_type" class="form-label">
+                                <i class="fas fa-hotel me-2"></i>Accommodation Type (Optional)
+                            </label>
+                            <input type="text" class="form-control" id="accommodation_type" name="accommodation_type" 
+                                   placeholder="e.g., Hotel, Hostel, Airbnb" value="{{ accommodation_type }}">
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="transportation" class="form-label">
+                                <i class="fas fa-car me-2"></i>Transportation (Optional)
+                            </label>
+                            <input type="text" class="form-control" id="transportation" name="transportation" 
+                                   placeholder="e.g., Flights, Train, Rental Car" value="{{ transportation }}">
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="interests" class="form-label">
+                                <i class="fas fa-heart me-2"></i>Interests (Optional)
+                            </label>
+                            <textarea class="form-control" id="interests" name="interests" rows="3" 
+                                      placeholder="e.g., historical sites, beaches, food tours">{{ interests }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 generate-itinerary-btn">
+                            Generate Itinerary <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-6 output-section">
+                <div class="output-container">
+                    <div class="section-header">
+                        <h2>
+                            <i class="fas fa-route me-2"></i>
+                            Your Itinerary
+                        </h2>
+                        <p class="text-muted">Your personalized travel plan will appear here</p>
+                    </div>
+
+                    <div class="itinerary-content">
+                        {% if itinerary_html %}
+                            {{ itinerary_html | safe }}
+                        {% else %}
+                            <div class="no-itinerary-message">
+                                <p>Fill out the form on the left and click "Generate Itinerary" to see your dream trip come to life!</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if itinerary_html %}
+                    <div class="itinerary-actions mt-4">
+                        <button class="btn btn-outline-secondary me-2" onclick="printItinerary()">
+                            <i class="fas fa-print me-2"></i>Print Itinerary
+                        </button>
+                        <a href="{{ url_for('planner') }}" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Create New Trip Plan
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Date picker logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('start_date').setAttribute('min', today);
+        document.getElementById('end_date').setAttribute('min', today);
+        
+        // Update end date minimum when start date changes
+        document.getElementById('start_date').addEventListener('change', function() {
+            document.getElementById('end_date').setAttribute('min', this.value);
+            // If end date is earlier than new start date, reset it
+            if (this.value > document.getElementById('end_date').value) {
+                document.getElementById('end_date').value = this.value;
+            }
+        });
+    });
+
+    function printItinerary() {
+        const itineraryContent = document.querySelector('.itinerary-content').innerHTML;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Travel Itinerary</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .trip-overview { margin-bottom: 20px; }
+                        .day-plan { margin: 20px 0; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+                        .activity { margin: 10px 0; display: flex; }
+                        .time { font-weight: bold; width: 100px; }
+                        .description { flex: 1; }
+                        h3, h4, h5 { color: #333; }
+                        .ai-notice { font-style: italic; color: #888; margin-top: 15px; }
+                        .travel-tips { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
+                    </style>
+                </head>
+                <body>
+                    ${itineraryContent}
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 1; }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-    
-    .planner-page .row {
-        flex-direction: column;
-    }
-    
-    .input-section, .output-section {
-        min-height: auto;
-        padding: 1rem;
-    }
-    
-    .input-container, .output-container {
-        padding: 1rem;
-        max-height: none; /* Remove max-height on small screens, let content flow */
-    }
-
-    /* Sidebar and page content adjustments for mobile when sidebar is active */
-    #wrapper.toggled #sidebar-wrapper {
-        margin-left: 0;
-    }
-    #wrapper.toggled #page-content-wrapper {
-        margin-left: var(--sidebar-width);
-    }
-    .navbar-sidebar-toggle {
-        width: 100%;
-        left: 0;
-    }
-    /* Ensure padding for fixed top bar on smaller screens */
-    #page-content-wrapper {
-        padding-top: var(--navbar-height); /* Always ensure space for top bar */
-    }
-    #wrapper.has-sidebar #page-content-wrapper {
-        padding-top: var(--navbar-height); /* Ensure this rule applies if sidebar is active */
-    }
-
-    .activity {
-        flex-direction: column;
-    }
-    
-    .activity .time {
-        min-width: auto;
-        margin-bottom: 0.5rem;
-    }
-
-    .itinerary-content {
-        max-height: 50vh; /* Shorter max-height for mobile to prevent excessively long scrolls */
-    }
-
-    .saved-trips-page {
-        padding-top: calc(1rem + var(--navbar-height)); /* Adjusted padding for smaller screens */
-    }
-}
-
-@media (max-width: 576px) {
-    .hero-title {
-        font-size: 2rem;
-    }
-    
-    .feature-item {
-        margin-bottom: 1.5rem;
-    }
-
-    .loading-container {
-        padding: 20px;
-    }
-
-    .loading-icon .spinning {
-        font-size: 3rem;
-    }
-
-    .loading-title {
-        font-size: 1.5rem;
-    }
-}
+</script>
+{% endblock %}
