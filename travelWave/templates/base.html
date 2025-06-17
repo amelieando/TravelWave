@@ -5,36 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Travel Itinerary Planner{% endblock %}</title>
     
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     
     {% block head %}{% endblock %}
 </head>
 <body>
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-container">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
+    <div id="wrapper" {% if show_sidebar %}class="has-sidebar"{% endif %}>
+        {% if show_sidebar %}
+        <div id="sidebar-wrapper">
+            <div class="sidebar-heading">Travel Planner</div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('index') }}" class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-home me-3"></i><span>Home</span>
+                </a>
+                <a href="{{ url_for('planner') }}" class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-map-marked-alt me-3"></i><span>Plan a New Trip</span>
+                </a>
+                <a href="{{ url_for('saved_trips') }}" class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-bookmark me-3"></i><span>Saved Trips</span>
+                </a>
             </div>
+        </div>
         {% endif %}
-    {% endwith %}
+        <div id="page-content-wrapper">
+            {% if show_sidebar %}
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top navbar-sidebar-toggle">
+                <div class="container-fluid">
+                    <button class="btn btn-toggle-sidebar" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <a class="navbar-brand ms-3 d-none d-lg-block" href="{{ url_for('index') }}">TravelWave</a>
+                </div>
+            </nav>
+            {% endif %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-container">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-    <!-- Main Content -->
-    {% block content %}{% endblock %}
-
-    <!-- Bootstrap JS -->
+            {% block content %}{% endblock %}
+        </div>
+        </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
     {% block scripts %}{% endblock %}
